@@ -1,0 +1,112 @@
+import React from "react";
+import type { TaskItem } from "./types";
+interface TaskFormProps {
+  addTask: (task: TaskItem) => void;
+}
+interface TaskFormState {
+  title: string;
+  description?: string;
+  dueDate: string;
+}
+
+const TaskForm = (props: TaskFormProps) => {
+  const [formState, setFormState] = React.useState<TaskFormState>({
+    title: "",
+    description: "",
+    dueDate: "",
+  });
+
+  const titleChanged: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    console.log(`${event.target.value}`);
+    setFormState({ ...formState, title: event.target.value });
+  };
+  const descriptionChanged: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    console.log(`${event.target.value}`);
+    setFormState({ ...formState, description: event.target.value });
+  };
+  const dueDateChanged: React.ChangeEventHandler<HTMLInputElement> = (
+    event,
+  ) => {
+    console.log(`${event.target.value}`);
+    setFormState({ ...formState, dueDate: event.target.value });
+  };
+
+  const addTask: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    console.log(`Submitted the form with`);
+    if (formState.title.length === 0 || formState.dueDate.length === 0) {
+      return;
+    }
+    props.addTask({ ...formState, id: Date.now().toString() });
+    setFormState({ title: "", description: "", dueDate: "" });
+  };
+
+  return (
+    <form onSubmit={addTask}>
+      <div className="grid md:grid-cols-4 md:gap-3">
+        <div className=" elative z-0 w-full mb-6 group">
+          <input
+            id="todoTitle"
+            name="todoTitle"
+            type="text"
+            value={formState.title}
+            onChange={titleChanged}
+            placeholder="write title"
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          />
+          <label
+            htmlFor="todotitle"
+            className=""
+          >
+            Title
+          </label>
+        
+        </div>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            id="todoDescription"
+            name="todoDescription"
+            type="text"
+            value={formState.description}
+            onChange={descriptionChanged}
+            placeholder="write description "
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          />
+          <label
+            htmlFor="todoDescription"
+            className=""
+          >
+            Description
+          </label>
+        </div>
+        <div className="relative z-0 w-full mb-6 group">
+          <input
+            id="todoDueDate"
+            name="todoDueDate"
+            type="date"
+            value={formState.dueDate}
+            onChange={dueDateChanged}
+            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=" "
+            required
+          />
+          <label
+            htmlFor="todoDueDate"
+            className=""
+          >
+            Due Date
+          </label>
+        </div>
+        <div>
+          <button type="submit" className="text-white bg-black rounded-md p-2">
+            Add item
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+export default TaskForm;
